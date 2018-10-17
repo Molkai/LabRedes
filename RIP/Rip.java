@@ -7,16 +7,18 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-class Multicast implements Runnable {
+class Rip implements Runnable {
     public Socket csocket;
-    private node nd;
+    private static node nd;
+    public static flag;
 
-    public Multicast (Socket connectionSocket, int c){
+    public Rip (Socket connectionSocket){
         this.csocket = connectionSocket;
     }
 
     public static void main(String argv[]) throws Exception {
 
+        flag = true;
         BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
         int id = Integer.parseInt(inFromUser.readLine());
         int[][] inTable = new int[4][2];
@@ -28,15 +30,15 @@ class Multicast implements Runnable {
                 inTable[i][1] = -1;
         }
         nd = new node(inTable, id);
-
+        nd.getTable();
         new Thread(receive).start();
-        //new Thread(send).start();
+        new Thread(send).start();
     }
 
     private static Runnable receive = new Runnable() {
         public void run() {
             try{
-                ServerSocket welcomeSocket = new ServerSocket(/*Porta entre 6520 e 5523 para três processos*/);
+                ServerSocket welcomeSocket = new ServerSocket(6520);
 
             while(true) {
                 Socket connectionSocket = welcomeSocket.accept();
@@ -62,7 +64,7 @@ class Multicast implements Runnable {
             if(nd.rtUpdate(rcvdTable, id) == true){
 
                 for(i = 0; i < 3; i++){
-                    Socket clientSocket = new Socket(/*"IP"*/, 6520+i);
+                    Socket clientSocket = new Socket("200.9.84.172", 6520+i);
                     DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
                     outToServer.writeBytes(ackMessage.toString());
                     clientSocket.close();
@@ -77,18 +79,51 @@ class Multicast implements Runnable {
   private static Runnable send = new Runnable() {
         public void run() {
             try{
+                int[] sendVector;
                 int i;
 
                 while(true){
+                    sendVector = nd.getTable();
                     StringBuilder sendMessage = new StringBuilder();
+                    sendMessage = sendMessage.append(Integer.toString(nd.getId()) + '\n');
+                    for(i = 0; i < 4; i++)
+                        sendMessage = sendMessage.append(Integer.toString(sendVector[i]) + '\n');
                     BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
-                    String message = inFromUser.readLine();
-                    sendMessage = sendMessage.append("0" + '\n' + Integer.toString(clock) + '\n' + Integer.toString(pid) + '\n' + message + '\n');
-                    for(i = 0; i < 3; i++){
-                        Socket clientSocket = new Socket(/*"IP"*/, 6520+i);
-                        DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
-                        outToServer.writeBytes(sendMessage.toString());
-                        clientSocket.close();
+                    if((inFromUser.readLine().equals("send") == true && flag == true){
+                        if(nd.getId() == 0)
+                            for(i = 0; i < 3; i++){
+                                Socket clientSocket = new Socket("200.9.84.172", 6521+i);
+                                DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+                                outToServer.writeBytes(sendMessage.toString());
+                                clientSocket.close();
+                            }
+                        else if(nd.getId() == 1) {
+                            Socket clientSocket = new Socket("200.9.84.172", 6520);
+                            DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+                            outToServer.writeBytes(sendMessage.toString());
+                            clientSocket.close();
+                            Socket clientSocket = new Socket("200.9.84.172", 6522);
+                            DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+                            outToServer.writeBytes(sendMessage.toString());
+                            clientSocket.close();
+                        } else if(nd.getId() == 2) {
+                            for(i = 0; i < 4; i++)
+                                if(i != 2){
+                                    Socket clientSocket = new Socket("200.9.84.172", 6520+i);
+                                    DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+                                    outToServer.writeBytes(sendMessage.toString());
+                                    clientSocket.close();
+                                }
+                        } else {
+                            Socket clientSocket = new Socket("200.9.84.172", 6520);
+                            DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+                            outToServer.writeBytes(sendMessage.toString());
+                            clientSocket.close();
+                            Socket clientSocket = new Socket("200.9.84.172", 6522);
+                            DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+                            outToServer.writeBytes(sendMessage.toString());
+                            clientSocket.close();
+                        }
                     }
                 }
             }
