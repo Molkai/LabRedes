@@ -39,14 +39,14 @@ class Rip implements Runnable {
             try{
                 ServerSocket welcomeSocket = new ServerSocket(6523);
 
-            while(true) {
-                Socket connectionSocket = welcomeSocket.accept();
+                while(true) {
+                    Socket connectionSocket = welcomeSocket.accept();
 
-                Rip s = new Rip(connectionSocket);
-                Thread t = new Thread(s);
-                t.start();
+                    Rip s = new Rip(connectionSocket);
+                    Thread t = new Thread(s);
+                    t.start();
+                }
             }
-        }
             catch(IOException a) {
                 a.printStackTrace();
             }
@@ -72,6 +72,7 @@ class Rip implements Runnable {
             try{
                 int[] sendVector;
                 int i;
+                BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
 
                 while(true){
                     if(inFromUser.readLine().equals("send") == true && flag == true){
@@ -82,7 +83,6 @@ class Rip implements Runnable {
                         sendMessage = sendMessage.append(Integer.toString(nd.getId()) + '\n');
                         for(i = 0; i < 4; i++)
                             sendMessage = sendMessage.append(Integer.toString(sendVector[i]) + '\n');
-                        BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
                         if(nd.getId() == 0)
                             for(i = 0; i < 3; i++){
                                 Socket clientSocket = new Socket("200.9.84.172", 6521+i);
@@ -117,7 +117,11 @@ class Rip implements Runnable {
                             outToServer.writeBytes(sendMessage.toString());
                             clientSocket.close();
                         }
+                    } else {
+                        System.out.printf("Sem Mudanças!!!\n");
+                        nd.printTable();
                     }
+
                 }
             }
 
