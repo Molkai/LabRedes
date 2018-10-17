@@ -24,5 +24,4 @@ public class node{
     public int[] getTable(){
         return routeTable;
     }
-
 }
