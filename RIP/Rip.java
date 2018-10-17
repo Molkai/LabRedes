@@ -68,6 +68,7 @@ class Multicast implements Runnable {
                 }
             }
         }
+
         catch(IOException a) {
                 a.printStackTrace();
         }
@@ -75,26 +76,26 @@ class Multicast implements Runnable {
 
   private static Runnable send = new Runnable() {
         public void run() {
-          try{
-            int i;
+            try{
+                int i;
 
-            while(true){
-              StringBuilder sendMessage = new StringBuilder();
-            BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
-            String message = inFromUser.readLine();
-            clock++;
-            sendMessage = sendMessage.append("0" + '\n' + Integer.toString(clock) + '\n' + Integer.toString(pid) + '\n' + message + '\n');
-            for(i = 0; i < 3; i++){
-              Socket clientSocket = new Socket(/*"IP"*/, 6520+i);
-              DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
-              outToServer.writeBytes(sendMessage.toString());
-              clientSocket.close();
-          }
-        }
-      }
-      catch(IOException a) {
-              a.printStackTrace();
-      }
+                while(true){
+                    StringBuilder sendMessage = new StringBuilder();
+                    BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
+                    String message = inFromUser.readLine();
+                    sendMessage = sendMessage.append("0" + '\n' + Integer.toString(clock) + '\n' + Integer.toString(pid) + '\n' + message + '\n');
+                    for(i = 0; i < 3; i++){
+                        Socket clientSocket = new Socket(/*"IP"*/, 6520+i);
+                        DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+                        outToServer.writeBytes(sendMessage.toString());
+                        clientSocket.close();
+                    }
+                }
+            }
+
+            catch(IOException a) {
+                a.printStackTrace();
+            }
         }
     };
 

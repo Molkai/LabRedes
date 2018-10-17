@@ -10,12 +10,12 @@ public class node{
             routeTable[i] = init[i];
     }
 
-    public boolean rtUpdate(int[] rcvdTable){
+    public boolean rtUpdate(int[] rcvdTable, int id){
         boolean flag = false;
 
         for(int i = 0; i < 4; i++)
-            if(routeTable[i] > rcvdTable[i] + 1){
-                routeTable[i] = rcvdTable[i] + 1;
+            if(routeTable[i] > rcvdTable[i] + routeTable[id]){
+                routeTable[i] = rcvdTable[i] + routeTable[id];
                 flag = true;
             }
         return flag;
