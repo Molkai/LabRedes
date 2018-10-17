@@ -9,6 +9,7 @@ import java.util.*;
 
 class Multicast implements Runnable {
     public Socket csocket;
+    private node nd;
 
     public Multicast (Socket connectionSocket, int c){
         this.csocket = connectionSocket;
@@ -16,8 +17,20 @@ class Multicast implements Runnable {
 
     public static void main(String argv[]) throws Exception {
 
+        BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
+        int id = Integer.parseInt(inFromUser.readLine());
+        int[][] inTable = new int[4][2];
+        for(int i = 0; i < 4; i++){
+            inTable[i][0] = Integer.parseInt(inFromUser.readLine());
+            if(inTable[i][0] != 999)
+                inTable[i][1] = i;
+            else
+                inTable[i][1] = -1;
+        }
+        nd = new node(inTable, id);
+
         new Thread(receive).start();
-        new Thread(send).start();
+        //new Thread(send).start();
     }
 
     private static Runnable receive = new Runnable() {
@@ -41,25 +54,13 @@ class Multicast implements Runnable {
 
     public void run(){
         try{
-            int i;
-
             BufferedReader inFromClient = new BufferedReader(new InputStreamReader(this.csocket.getInputStream()));
+            int id = Integer.parseInt(inFromClient.readLine());
+            int[] rcvdTable = new int[4];
+            for(int i = 0; i < 4; i++)
+                rcvdTable[i] = Integer.parseInt(inFromClient.readLine());
+            if(nd.rtUpdate(rcvdTable, id) == true){
 
-            String ack = inFromClient.readLine();
-            if(ack.equals("1") == true){
-                int clock_pid = Integer.parseInt(inFromClient.readLine());
-                int messageClock = Integer.parseInt(inFromClient.readLine());
-
-            }
-            else if(ack.equals("0") == true){
-                int messageClock = Integer.parseInt(inFromClient.readLine());
-                int messagePid = Integer.parseInt(inFromClient.readLine());
-                String text = inFromClient.readLine();
-            int clock_pid;
-            clock_pid = messageClock*10+messagePid; // Aqui não deveria ser messageClock*10+messagePid?
-            StringBuilder ackMessage = new StringBuilder();
-            ackMessage = ackMessage.append("1" + '\n' + Integer.toString(clock_pid) + '\n' + Integer.toString(clock) + '\n'
-            + Integer.toString(pid) + '\n');
                 for(i = 0; i < 3; i++){
                     Socket clientSocket = new Socket(/*"IP"*/, 6520+i);
                     DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
@@ -68,7 +69,6 @@ class Multicast implements Runnable {
                 }
             }
         }
-
         catch(IOException a) {
                 a.printStackTrace();
         }
