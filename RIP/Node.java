@@ -1,8 +1,11 @@
 public class node{
     private int[] routeTable;
+    static private int id;
 
-    public node(int[] init){
+    public node(int[] init, int id){
         routeTable = new int[4];
+        this.id = id;
+
         for(int i = 0; i < 4; i++)
             routeTable[i] = init[i];
     }
