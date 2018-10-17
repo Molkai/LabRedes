@@ -1,13 +1,14 @@
 public class node{
-    private int[] routeTable;
+    private int[][] routeTable;
     static private int id;
 
-    public node(int[] init, int id){
-        routeTable = new int[4];
+    public node(int[][] init, int id){
+        routeTable = new int[4][2];
         this.id = id;
 
         for(int i = 0; i < 4; i++)
-            routeTable[i] = init[i];
+            for(int j = 0; j < 2; j++)
+                routeTable[i][j] = init[i][j];
     }
 
     public boolean rtUpdate(int[] rcvdTable, int id){
@@ -15,7 +16,8 @@ public class node{
 
         for(int i = 0; i < 4; i++)
             if(routeTable[i] > rcvdTable[i] + routeTable[id]){
-                routeTable[i] = rcvdTable[i] + routeTable[id];
+                routeTable[i][0] = rcvdTable[i] + routeTable[id];
+                routeTable[i][1] = id;
                 flag = true;
             }
         return flag;
