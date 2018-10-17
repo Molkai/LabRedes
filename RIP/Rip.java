@@ -61,15 +61,7 @@ class Rip implements Runnable {
             int[] rcvdTable = new int[4];
             for(int i = 0; i < 4; i++)
                 rcvdTable[i] = Integer.parseInt(inFromClient.readLine());
-            if(nd.rtUpdate(rcvdTable, id) == true){
-
-                for(i = 0; i < 3; i++){
-                    Socket clientSocket = new Socket("200.9.84.172", 6520+i);
-                    DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
-                    outToServer.writeBytes(ackMessage.toString());
-                    clientSocket.close();
-                }
-            }
+            flag = nd.rtupdate(rcvdTable, id);
         }
         catch(IOException a) {
                 a.printStackTrace();
