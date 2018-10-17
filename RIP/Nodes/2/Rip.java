@@ -37,7 +37,7 @@ class Rip implements Runnable {
     private static Runnable receive = new Runnable() {
         public void run() {
             try{
-                ServerSocket welcomeSocket = new ServerSocket(6520);
+                ServerSocket welcomeSocket = new ServerSocket(6522);
 
             while(true) {
                 Socket connectionSocket = welcomeSocket.accept();
@@ -128,3 +128,4 @@ class Rip implements Runnable {
     };
 
 }
+
