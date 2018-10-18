@@ -30,6 +30,7 @@ class Rip implements Runnable {
                 inTable[i][1] = -1;
         }
         nd = new node(inTable, id);
+        nd.printTable();
         new Thread(receive).start();
         new Thread(send).start();
     }
@@ -55,12 +56,17 @@ class Rip implements Runnable {
 
     public void run(){
         try{
+            boolean aux;
+
             BufferedReader inFromClient = new BufferedReader(new InputStreamReader(this.csocket.getInputStream()));
             int id = Integer.parseInt(inFromClient.readLine());
             int[] rcvdTable = new int[4];
             for(int i = 0; i < 4; i++)
                 rcvdTable[i] = Integer.parseInt(inFromClient.readLine());
-            flag = nd.rtUpdate(rcvdTable, id);
+            System.out.printf("Recebido Vetor do 'node' %d\n", id);
+            aux = nd.rtUpdate(rcvdTable, id);
+            if(flag == false)
+                flag = aux;
         }
         catch(IOException a) {
                 a.printStackTrace();
@@ -85,34 +91,34 @@ class Rip implements Runnable {
                             sendMessage = sendMessage.append(Integer.toString(sendVector[i]) + '\n');
                         if(nd.getId() == 0)
                             for(i = 0; i < 3; i++){
-                                Socket clientSocket = new Socket("200.9.84.172", 6521+i);
+                                Socket clientSocket = new Socket("192.168.0.11", 6521+i);
                                 DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
                                 outToServer.writeBytes(sendMessage.toString());
                                 clientSocket.close();
                             }
                         else if(nd.getId() == 1) {
-                            Socket clientSocket = new Socket("200.9.84.172", 6520);
+                            Socket clientSocket = new Socket("192.168.0.11", 6520);
                             DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
                             outToServer.writeBytes(sendMessage.toString());
                             clientSocket.close();
-                            clientSocket = new Socket("200.9.84.172", 6522);
+                            clientSocket = new Socket("192.168.0.11", 6522);
                             outToServer = new DataOutputStream(clientSocket.getOutputStream());
                             outToServer.writeBytes(sendMessage.toString());
                             clientSocket.close();
                         } else if(nd.getId() == 2) {
                             for(i = 0; i < 4; i++)
                                 if(i != 2){
-                                    Socket clientSocket = new Socket("200.9.84.172", 6520+i);
+                                    Socket clientSocket = new Socket("192.168.0.11", 6520+i);
                                     DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
                                     outToServer.writeBytes(sendMessage.toString());
                                     clientSocket.close();
                                 }
                         } else {
-                            Socket clientSocket = new Socket("200.9.84.172", 6520);
+                            Socket clientSocket = new Socket("192.168.0.11", 6520);
                             DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
                             outToServer.writeBytes(sendMessage.toString());
                             clientSocket.close();
-                            clientSocket = new Socket("200.9.84.172", 6522);
+                            clientSocket = new Socket("192.168.0.11", 6522);
                             outToServer = new DataOutputStream(clientSocket.getOutputStream());
                             outToServer.writeBytes(sendMessage.toString());
                             clientSocket.close();
