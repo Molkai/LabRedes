@@ -67,6 +67,10 @@ class Rip implements Runnable {
             aux = nd.rtUpdate(rcvdTable, id);
             if(flag == false)
                 flag = aux;
+            if(aux == true)
+                nd.printTable();
+            else
+                System.out.printf("Sem Mudanças!!!\n");
         }
         catch(IOException a) {
                 a.printStackTrace();
@@ -84,7 +88,6 @@ class Rip implements Runnable {
                     if(inFromUser.readLine().equals("send") == true && flag == true){
                         flag = false;
                         sendVector = nd.getTable();
-                        nd.printTable();
                         StringBuilder sendMessage = new StringBuilder();
                         sendMessage = sendMessage.append(Integer.toString(nd.getId()) + '\n');
                         for(i = 0; i < 4; i++)
@@ -124,7 +127,6 @@ class Rip implements Runnable {
                             clientSocket.close();
                         }
                     } else {
-                        System.out.printf("Sem Mudanças!!!\n");
                         nd.printTable();
                     }
                 }
