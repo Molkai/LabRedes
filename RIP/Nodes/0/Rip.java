@@ -11,6 +11,7 @@ class Rip implements Runnable {
     public Socket csocket;
     private static node nd;
     public static boolean flag;
+    private static String ip = "200.18.100.77";
 
     public Rip (Socket connectionSocket){
         this.csocket = connectionSocket;
@@ -94,40 +95,49 @@ class Rip implements Runnable {
                             sendMessage = sendMessage.append(Integer.toString(sendVector[i]) + '\n');
                         if(nd.getId() == 0)
                             for(i = 0; i < 3; i++){
-                                Socket clientSocket = new Socket("200.18.100.77", 6521+i);
+                                Socket clientSocket = new Socket(ip, 6521+i);
                                 DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
                                 outToServer.writeBytes(sendMessage.toString());
                                 clientSocket.close();
                             }
                         else if(nd.getId() == 1) {
-                            Socket clientSocket = new Socket("200.18.100.77", 6520);
+                            Socket clientSocket = new Socket(ip, 6520);
                             DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
                             outToServer.writeBytes(sendMessage.toString());
                             clientSocket.close();
-                            clientSocket = new Socket("200.18.100.77", 6522);
+                            clientSocket = new Socket(ip, 6522);
                             outToServer = new DataOutputStream(clientSocket.getOutputStream());
                             outToServer.writeBytes(sendMessage.toString());
                             clientSocket.close();
                         } else if(nd.getId() == 2) {
                             for(i = 0; i < 4; i++)
                                 if(i != 2){
-                                    Socket clientSocket = new Socket("200.18.100.77", 6520+i);
+                                    Socket clientSocket = new Socket(ip, 6520+i);
                                     DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
                                     outToServer.writeBytes(sendMessage.toString());
                                     clientSocket.close();
                                 }
                         } else {
-                            Socket clientSocket = new Socket("200.18.100.77", 6520);
+                            Socket clientSocket = new Socket(ip, 6520);
                             DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
                             outToServer.writeBytes(sendMessage.toString());
                             clientSocket.close();
-                            clientSocket = new Socket("200.18.100.77", 6522);
+                            clientSocket = new Socket(ip, 6522);
                             outToServer = new DataOutputStream(clientSocket.getOutputStream());
                             outToServer.writeBytes(sendMessage.toString());
                             clientSocket.close();
                         }
                     } else {
                         nd.printTable();
+                           //caso deseje parar o programa
+                        String end = "Y";
+                        StringBuffer ans;
+
+                        System.out.println("Deseja encerrar o processo? Y/N");
+                        inFromUser = new BufferedReader(new InputStreamReader(System.in));
+                        ans = inFromUser.readLine();
+                        if(end.equals(ans))
+                            System.exit(0);
                     }
                 }
             }
