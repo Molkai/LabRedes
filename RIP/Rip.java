@@ -29,7 +29,9 @@ class Rip implements Runnable {
                 inTable[i][1] = -1;
         }
         nd = new node(inTable, id);
+        System.out.printf("Inicialmente a tabela do node %d é:\n", nd.getId());
         nd.printTable();
+        System.out.printf("\n");
         new Thread(receive).start();
         new Thread(send).start();
     }
@@ -127,14 +129,14 @@ class Rip implements Runnable {
                             clientSocket.close();
                         }
                     } else {
-                        System.out.printf("Sem Mudanças!!!\n");
+                        System.out.printf("Nenhum pacote enviado(Sem Mudanças!!!)\n");
                         nd.printTable();
                         System.out.printf("\n");
                         //caso deseje parar o programa
-                        String end = "Y";
+                        String end = "y";
                         StringBuffer ans;
 
-                        System.out.println("Deseja encerrar o processo? Y/N");
+                        System.out.println("Deseja encerrar o processo? y/n");
                         inFromUser = new BufferedReader(new InputStreamReader(System.in));
                         ans = inFromUser.readLine();
                         if(end.equals(ans))

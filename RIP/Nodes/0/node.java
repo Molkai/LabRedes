@@ -25,7 +25,7 @@ public class node{
 
     public void printTable(){
         for(int i = 0; i < 4; i++)
-            System.out.printf("%d\t%d\n", routeTable[i][0], routeTable[i][1]);
+            System.out.printf("Node[%d]\t%d\t%d\n", i, routeTable[i][0], routeTable[i][1]);
     }
 
     public int[] getTable(){

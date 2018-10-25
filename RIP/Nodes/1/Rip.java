@@ -11,14 +11,12 @@ class Rip implements Runnable {
     public Socket csocket;
     private static node nd;
     public static boolean flag;
-    private static String ip = "200.18.100.77";
 
     public Rip (Socket connectionSocket){
         this.csocket = connectionSocket;
     }
 
     public static void main(String argv[]) throws Exception {
-
         flag = true;
         BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
         int id = Integer.parseInt(inFromUser.readLine());
@@ -31,7 +29,9 @@ class Rip implements Runnable {
                 inTable[i][1] = -1;
         }
         nd = new node(inTable, id);
+        System.out.printf("Inicialmente a tabela do node %d é:\n", nd.getId());
         nd.printTable();
+        System.out.printf("\n");
         new Thread(receive).start();
         new Thread(send).start();
     }
@@ -64,14 +64,16 @@ class Rip implements Runnable {
             int[] rcvdTable = new int[4];
             for(int i = 0; i < 4; i++)
                 rcvdTable[i] = Integer.parseInt(inFromClient.readLine());
-            System.out.printf("Recebido Vetor do 'node' %d\n", id);
+            System.out.printf("Recebido Vetor do node %d\n", id);
             aux = nd.rtUpdate(rcvdTable, id);
             if(flag == false)
                 flag = aux;
-            if(aux == true)
+            if(aux == true){
                 nd.printTable();
+                System.out.printf("\n");
+            }
             else
-                System.out.printf("Sem Mudanças!!!\n");
+                System.out.printf("Sem Mudanças!!!\n\n");
         }
         catch(IOException a) {
                 a.printStackTrace();
@@ -95,45 +97,47 @@ class Rip implements Runnable {
                             sendMessage = sendMessage.append(Integer.toString(sendVector[i]) + '\n');
                         if(nd.getId() == 0)
                             for(i = 0; i < 3; i++){
-                                Socket clientSocket = new Socket(private static String ip =private static String ip =, 6521+i);
+                                Socket clientSocket = new Socket("192.168.0.11", 6521+i);
                                 DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
                                 outToServer.writeBytes(sendMessage.toString());
                                 clientSocket.close();
                             }
                         else if(nd.getId() == 1) {
-                            Socket clientSocket = new Socket(ip, 6520);
+                            Socket clientSocket = new Socket("192.168.0.11", 6520);
                             DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
                             outToServer.writeBytes(sendMessage.toString());
                             clientSocket.close();
-                            clientSocket = new Socket(ip, 6522);
+                            clientSocket = new Socket("192.168.0.11", 6522);
                             outToServer = new DataOutputStream(clientSocket.getOutputStream());
                             outToServer.writeBytes(sendMessage.toString());
                             clientSocket.close();
                         } else if(nd.getId() == 2) {
                             for(i = 0; i < 4; i++)
                                 if(i != 2){
-                                    Socket clientSocket = new Socket(ip, 6520+i);
+                                    Socket clientSocket = new Socket("192.168.0.11", 6520+i);
                                     DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
                                     outToServer.writeBytes(sendMessage.toString());
                                     clientSocket.close();
                                 }
                         } else {
-                            Socket clientSocket = new Socket(ip, 6520);
+                            Socket clientSocket = new Socket("192.168.0.11", 6520);
                             DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
                             outToServer.writeBytes(sendMessage.toString());
                             clientSocket.close();
-                            clientSocket = new Socket(ip, 6522);
+                            clientSocket = new Socket("192.168.0.11", 6522);
                             outToServer = new DataOutputStream(clientSocket.getOutputStream());
                             outToServer.writeBytes(sendMessage.toString());
                             clientSocket.close();
                         }
                     } else {
+                        System.out.printf("Nenhum pacote enviado(Sem Mudanças!!!)\n");
                         nd.printTable();
-                           //caso deseje parar o programa
-                        String end = "Y";
-                        StringBuffer ans;
+                        System.out.printf("\n");
+                        //caso deseje parar o programa
+                        String end = "y";
+                        String ans;
 
-                        System.out.println("Deseja encerrar o processo? Y/N");
+                        System.out.println("Deseja encerrar o processo? y/n");
                         inFromUser = new BufferedReader(new InputStreamReader(System.in));
                         ans = inFromUser.readLine();
                         if(end.equals(ans))
