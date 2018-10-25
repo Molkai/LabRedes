@@ -69,8 +69,9 @@ class Rip implements Runnable {
                 flag = aux;
             if(aux == true)
                 nd.printTable();
+                System.out.printf("\n");
             else
-                System.out.printf("Sem Mudanças!!!\n");
+                System.out.printf("Sem Mudanças!!!\n\n");
         }
         catch(IOException a) {
                 a.printStackTrace();
@@ -127,7 +128,9 @@ class Rip implements Runnable {
                             clientSocket.close();
                         }
                     } else {
+                        System.out.printf("Sem Mudanças!!!\n");
                         nd.printTable();
+                        System.out.printf("\n");
                     }
                 }
             }
