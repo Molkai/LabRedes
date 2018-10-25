@@ -17,7 +17,6 @@ class Rip implements Runnable {
     }
 
     public static void main(String argv[]) throws Exception {
-
         flag = true;
         BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
         int id = Integer.parseInt(inFromUser.readLine());
@@ -131,6 +130,15 @@ class Rip implements Runnable {
                         System.out.printf("Sem Mudanças!!!\n");
                         nd.printTable();
                         System.out.printf("\n");
+                        //caso deseje parar o programa
+                        String end = "Y";
+                        StringBuffer ans;
+
+                        System.out.println("Deseja encerrar o processo? Y/N");
+                        inFromUser = new BufferedReader(new InputStreamReader(System.in));
+                        ans = inFromUser.readLine();
+                        if(end.equals(ans))
+                            System.exit(0);
                     }
                 }
             }
