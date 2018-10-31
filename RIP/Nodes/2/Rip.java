@@ -97,34 +97,34 @@ class Rip implements Runnable {
                             sendMessage = sendMessage.append(Integer.toString(sendVector[i]) + '\n');
                         if(nd.getId() == 0)
                             for(i = 0; i < 3; i++){
-                                Socket clientSocket = new Socket("192.168.0.11", 6521+i);
+                                Socket clientSocket = new Socket("200.9.84.95", 6521+i);
                                 DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
                                 outToServer.writeBytes(sendMessage.toString());
                                 clientSocket.close();
                             }
                         else if(nd.getId() == 1) {
-                            Socket clientSocket = new Socket("192.168.0.11", 6520);
+                            Socket clientSocket = new Socket("200.9.84.95", 6520);
                             DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
                             outToServer.writeBytes(sendMessage.toString());
                             clientSocket.close();
-                            clientSocket = new Socket("192.168.0.11", 6522);
+                            clientSocket = new Socket("200.9.84.95", 6522);
                             outToServer = new DataOutputStream(clientSocket.getOutputStream());
                             outToServer.writeBytes(sendMessage.toString());
                             clientSocket.close();
                         } else if(nd.getId() == 2) {
                             for(i = 0; i < 4; i++)
                                 if(i != 2){
-                                    Socket clientSocket = new Socket("192.168.0.11", 6520+i);
+                                    Socket clientSocket = new Socket("200.9.84.95", 6520+i);
                                     DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
                                     outToServer.writeBytes(sendMessage.toString());
                                     clientSocket.close();
                                 }
                         } else {
-                            Socket clientSocket = new Socket("192.168.0.11", 6520);
+                            Socket clientSocket = new Socket("200.9.84.95", 6520);
                             DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
                             outToServer.writeBytes(sendMessage.toString());
                             clientSocket.close();
-                            clientSocket = new Socket("192.168.0.11", 6522);
+                            clientSocket = new Socket("200.9.84.95", 6522);
                             outToServer = new DataOutputStream(clientSocket.getOutputStream());
                             outToServer.writeBytes(sendMessage.toString());
                             clientSocket.close();

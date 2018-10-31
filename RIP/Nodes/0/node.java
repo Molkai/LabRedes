@@ -1,22 +1,26 @@
 public class node{
     private int[][] routeTable;
+    private int[] direct;
     static private int id;
 
     public node(int[][] init, int id){
         routeTable = new int[4][2];
+        direct = new int[4];
         this.id = id;
 
-        for(int i = 0; i < 4; i++)
+        for(int i = 0; i < 4; i++){
+            direct[i] = init[i][0];
             for(int j = 0; j < 2; j++)
                 routeTable[i][j] = init[i][j];
+        }
     }
 
     public boolean rtUpdate(int[] rcvdTable, int id){
         boolean flag = false;
 
         for(int i = 0; i < 4; i++)
-            if(routeTable[i][0] > rcvdTable[i] + routeTable[id][0]){
-                routeTable[i][0] = rcvdTable[i] + routeTable[id][0];
+            if(routeTable[i][0] > rcvdTable[i] + direct[id]){
+                routeTable[i][0] = rcvdTable[i] + direct[id];
                 routeTable[i][1] = id;
                 flag = true;
             }
